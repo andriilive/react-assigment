@@ -3,6 +3,13 @@ import {useAppContext} from "@/context";
 import {type Neighborhood, symbolToIcon, TypeSYMBOLS, valueToGreenColor} from "@/lib/utils";
 import React from "react";
 
+// import Airplane_svg from '@/assets/airplane.svg';
+// import Bicycle_svg from '@/assets/bicycle.svg';
+// import Boat_svg from '@/assets/boat.svg';
+// import Bus_svg from '@/assets/bus.svg';
+// import CarSport_svg from '@/assets/car.svg';
+// import Person_svg from '@/assets/person.svg';
+
 
 export default function Cell({id, cells, value, type: symbol, ...props}: Neighborhood) {
 

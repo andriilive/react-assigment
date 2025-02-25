@@ -2,13 +2,15 @@ import Filter from "@/components/Neighborhood/Filter";
 import NeighborhoodEl from "@/components/Neighborhood/Cell";
 import {useTime} from "@/components/Time/use_time";
 import {Button} from "@/components/ui/button";
-import {ScrollArea, ScrollBar} from "@/components/ui/react-scroll-area";
+// import {DialogPortal} from "@/components/ui/dialog";
+// import {ScrollArea, ScrollBar} from "@/components/ui/react-scroll-area";
+// import {ScrollAreaCorner, ScrollAreaViewport} from "@radix-ui/react-scroll-area";
 import {useAppContext} from "@/context";
 import {generateInputData, type Neighborhood} from "@/lib/utils";
-import {ScrollAreaCorner, ScrollAreaViewport} from "@radix-ui/react-scroll-area";
 import {RefreshCcw} from "lucide-react";
 import React from "react";
 import useSWR from "swr";
+
 
 const fetcher = (url: string) => fetch('http://localhost:5001' + url, {
   method: 'POST',
@@ -65,7 +67,7 @@ const MemorizedItem = React.memo(NeighborhoodEl);
 export default function List() {
 
   const {state} = useAppContext()
-  const {data: neighborhoods, isLoading, error, mutate} = useSWR<Neighborhood[]>("/", fetcher);
+  const {data: neighborhoods, error, mutate} = useSWR<Neighborhood[]>("/", fetcher);
   const [countFiltered, setCountFiltered] = React.useState(0);
   const {timePeriod} = useTime();
 
@@ -97,23 +99,14 @@ export default function List() {
         Showing {countFiltered} of {count_neighborhoods} neighborhoods
       </Filter>
       <div id="content_boundary">
-        {isLoading && <div>Loading...</div>}
+        {!neighborhoods && <div>Loading...</div>}
         {error && <div>Error: {error.message}</div>}
-        {neighborhoods && (
-          <main id="content" className="">
-            <ScrollArea className={"relative overflow-hidden"}
-            >
-              <ScrollAreaViewport asChild className="h-full w-full rounded-[inherit]"
-              >
-                <div className="h-full w-full grid grid-cols-10 gap-10 px-20">
-                  {filtered.map((neighborhood) => <MemorizedItem key={neighborhood.id} {...neighborhood} />)}
-                </div>
-              </ScrollAreaViewport>
-              <ScrollBar/>
-              <ScrollAreaCorner/>
-            </ScrollArea>
-          </main>
-        )}
+        <main id="content" className="">
+          <div id="popover-portal" />
+          <div className="h-full w-full grid grid-cols-10 gap-10 px-20">
+            {filtered.map((neighborhood) => <MemorizedItem key={neighborhood.id} {...neighborhood} />)}
+          </div>
+        </main>
       </div>
       <Button className="fixed bottom-4 right-4" size="sm" onClick={() => mutate()}>
         <RefreshCcw/>
@@ -121,3 +114,26 @@ export default function List() {
     </>
   )
 }
+
+
+// function WithVirtualization({
+//   filtered: Neighborhood[],
+// }: {
+//   filtered: Neighborhood[];
+// }) {
+//   return (
+//     <main id="content" className="">
+//       <ScrollArea className={"relative overflow-hidden"}
+//       >
+//         <ScrollAreaViewport asChild className="h-full w-full rounded-[inherit]"
+//         >
+//           <div className="h-full w-full grid grid-cols-10 gap-10 px-20">
+//             {filtered.map((neighborhood) => <MemorizedItem key={neighborhood.id} {...neighborhood} />)}
+//           </div>
+//         </ScrollAreaViewport>
+//         <ScrollBar/>
+//         <ScrollAreaCorner/>
+//       </ScrollArea>
+//     </main>
+//   )
+// }
