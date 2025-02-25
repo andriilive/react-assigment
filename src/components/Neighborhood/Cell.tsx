@@ -3,6 +3,7 @@ import {useAppContext} from "@/context";
 import {type Neighborhood, symbolToIcon, TypeSYMBOLS, valueToGreenColor} from "@/lib/utils";
 import React from "react";
 
+
 export default function Cell({id, cells, value, type: symbol, ...props}: Neighborhood) {
 
   const {dispatch} = useAppContext();
@@ -10,7 +11,7 @@ export default function Cell({id, cells, value, type: symbol, ...props}: Neighbo
 
   const handleOpenChange = (val: boolean) => {
     setIsOpen(val);
-    dispatch({type: "TOGGLE_TIME_FILTERING", isTimeFiltering: !val});
+    dispatch({type: "FILTERING_FREEZE_TOGGLE"});
   }
 
   // The component should display the value and the symbol of the neighborhood
@@ -30,8 +31,8 @@ export default function Cell({id, cells, value, type: symbol, ...props}: Neighbo
     }} className="Neighborhood aspect-square" {...props}>
       <Popover onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
-          <button aria-current={isOpen} className="flex w-full h-full items-center justify-center border-current border-2">
-            <Icon className="size-5 fill-current"/>
+          <button aria-current={isOpen} className="flex rounded-lg w-full h-full items-center justify-center border-current border-2">
+            <Icon className="fill-current size-4" />
             <span>{value}</span>
           </button>
         </PopoverTrigger>

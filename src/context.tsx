@@ -9,12 +9,14 @@ interface State {
   theme: Theme;
   isTimeFiltering: boolean;
   selectedSymbol: string | null;
+  freezeFiltering: boolean;
 }
 
 type Action =
   | { type: "SWITCH_THEME" }
   | { type: "TOGGLE_TIME_FILTERING"; isTimeFiltering: boolean }
-  | { type: "SELECT_SYMBOL"; symbol?: typeof SYMBOLS[number]};
+  | { type: "SELECT_SYMBOL"; symbol?: typeof SYMBOLS[number]}
+  | { type: "FILTERING_FREEZE_TOGGLE"; }
 
 const AppContext = React.createContext<{
   state: State;
@@ -28,6 +30,8 @@ const reducer = (state: State, action: Action): State => {
       localStorage.setItem("theme", newTheme);
       return {...state, theme: newTheme};
     }
+    case "FILTERING_FREEZE_TOGGLE":
+      return {...state, freezeFiltering: !state.freezeFiltering};
     case "TOGGLE_TIME_FILTERING":
       return {...state, isTimeFiltering: action.isTimeFiltering};
     case "SELECT_SYMBOL":
@@ -42,6 +46,7 @@ const AppContextProvider = ({children}: React.PropsWithChildren) => {
   const [state, dispatch] = React.useReducer(reducer, {
     theme: (localStorage.getItem("theme") as Theme) || "light",
     isTimeFiltering: true,
+    freezeFiltering: false,
     selectedSymbol: null,
   });
 

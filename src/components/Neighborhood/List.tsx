@@ -2,8 +2,10 @@ import Filter from "@/components/Neighborhood/Filter";
 import NeighborhoodEl from "@/components/Neighborhood/Cell";
 import {useTime} from "@/components/Time/use_time";
 import {Button} from "@/components/ui/button";
+import {ScrollArea, ScrollBar} from "@/components/ui/react-scroll-area";
 import {useAppContext} from "@/context";
 import {generateInputData, type Neighborhood} from "@/lib/utils";
+import {ScrollAreaCorner, ScrollAreaViewport} from "@radix-ui/react-scroll-area";
 import {RefreshCcw} from "lucide-react";
 import React from "react";
 import useSWR from "swr";
@@ -58,6 +60,8 @@ function filterByPeriod(value: number, timePeriod: number): boolean {
   return value >= min && value <= max;
 }
 
+const MemorizedItem = React.memo(NeighborhoodEl);
+
 export default function List() {
 
   const {state} = useAppContext()
@@ -96,8 +100,18 @@ export default function List() {
         {isLoading && <div>Loading...</div>}
         {error && <div>Error: {error.message}</div>}
         {neighborhoods && (
-          <main id="content" className="grid grid-cols-10 gap-10 px-20">
-            {filtered.map((neighborhood) => <NeighborhoodEl key={neighborhood.id} {...neighborhood} />)}
+          <main id="content" className="">
+            <ScrollArea className={"relative overflow-hidden"}
+            >
+              <ScrollAreaViewport asChild className="h-full w-full rounded-[inherit]"
+              >
+                <div className="h-full w-full grid grid-cols-10 gap-10 px-20">
+                  {filtered.map((neighborhood) => <MemorizedItem key={neighborhood.id} {...neighborhood} />)}
+                </div>
+              </ScrollAreaViewport>
+              <ScrollBar/>
+              <ScrollAreaCorner/>
+            </ScrollArea>
           </main>
         )}
       </div>
