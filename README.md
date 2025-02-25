@@ -4,8 +4,6 @@
 
 ![preview.mp4](./preview.mp4)
 
-<video src='./preview.mp4' width=180 />
-
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
